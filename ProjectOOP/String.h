@@ -33,7 +33,7 @@ public:
 	bool operator>=(const char*) const;
 	bool operator<=(const char*) const;
 	bool operator<=(const String&) const;
-	char operator[](int) const;
+	char& operator[](int) const;
 	bool isThereAChar(char) const;
 	void RemoveAllIntervalsInString();
 	void PushBack(char);

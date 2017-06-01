@@ -23,9 +23,9 @@ String getASinglePart(const String& string, int& index)
 	else
 	{
 		bool didWeHaveANumberAlready = false;
-		while ((index < string.getLength() && (string[index] == '(' || string[index] == ')') == false && IsTheCurrentCharAnOperator(string, index) == false)
+		while ((index < string.getLength() && !(string[index] == '(' || string[index] == ')') && !IsTheCurrentCharAnOperator(string, index))
 				|| (index > 0 && IsTheCurrentCharAnOperator(string, index - 1) && (string[index] == '+' || string[index] == '-')
-				&& IsTheCurrentCharAnOperator(string, index + 1) == false && didWeHaveANumberAlready == false))
+				&& !IsTheCurrentCharAnOperator(string, index + 1) && !didWeHaveANumberAlready))
 		{
 			if (string[index] >= '0' && string[index] <= '9')
 				didWeHaveANumberAlready = true;

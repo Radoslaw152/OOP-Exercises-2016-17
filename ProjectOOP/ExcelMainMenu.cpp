@@ -137,6 +137,7 @@ void ExcelMainMenu::OperationsAfterFile(Excel& ExcelFMI)
 			if (RowOfElement >= ExcelFMI.GetRows() || ColumnOfElement >= ExcelFMI.GetColumns())
 			{
 				ExcelFMI.ResizeTheExcel(RowOfElement + 1, ColumnOfElement + 1);
+				numberOfRows = RowOfElement + 1;
 			}
 			if (TypeDeclaration(operations[2]) != INVALID_TYPE)
 			{
@@ -181,7 +182,7 @@ void ExcelMainMenu::OperationsAfterFile(Excel& ExcelFMI)
 		std::cerr << "You cannot use this Excel, until there are invalid data type cells.\nPlease use other file or edit this Excel's invalid data types." << std::endl;
 		OperationsAfterFile(ExcelFMI);
 	}
-	else if (ExcelFMI.AreElementsInvalid() == false)
+	else
 	{
 		
 		if (operation == "Print" || operation == "print" || operation == "Print")
@@ -203,13 +204,13 @@ void ExcelMainMenu::OperationsAfterFile(Excel& ExcelFMI)
 			Save(ExcelFMI);
 			OperationsAfterFile(ExcelFMI);
 		}
-	}
-	else 
-	{
-		delete[] operations;
-		std::cout << "You've entered an invalid operation. Please Try again!" << std::endl;
-		PrintALine();
-		OperationsAfterFile(ExcelFMI);
+		else
+		{
+			delete[] operations;
+			std::cout << "You've entered an invalid operation. Please Try again!" << std::endl;
+			PrintALine();
+			OperationsAfterFile(ExcelFMI);
+		}
 	}
 }
 void ExcelMainMenu::StartTheProgram()

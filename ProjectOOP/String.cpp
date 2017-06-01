@@ -80,12 +80,13 @@ std::istream& operator >> (std::istream& lhs, String& rhs)
 	rhs = buffer;
 	return lhs;
 }
-char String::operator[](int i) const
+char& String::operator[](int i) const
 {
 	if (i > m_length)
 	{
 		std::cerr << m_string << "is trying to give char N" << i << std::endl;
-		return '0';
+		char ch = '0';
+		return ch;
 	}
 	return m_string[i];
 }

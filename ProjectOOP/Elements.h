@@ -25,6 +25,7 @@ public:
 	virtual double ValueForFormula() { return 0; };
 	int GetLengthOfElement() const { return m_LengthOfElement; };
 	TypeOfElements GetType() const { return m_Type; };
+	virtual ~Elements() {};
 };
 TypeOfElements TypeDeclaration(const String&);
 std::istream& operator>> (std::istream&, const Elements&);
