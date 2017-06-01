@@ -274,7 +274,7 @@ void ExcelMainMenu::ShowOperations() const
 }
 void PrintALine()
 {
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 75; ++i)
 		std::cout << '-';
 	std::cout << std::endl;
 }
