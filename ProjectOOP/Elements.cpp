@@ -31,7 +31,7 @@ TypeOfElements TypeDeclaration(const String& str)
 	{
 		if (str[i] < '0' || str[i] > '9')
 		{
-			if (str[i] == '.' && isThereMoreThanOnePoint == false)
+			if (str[i] == '.' && !isThereMoreThanOnePoint)
 			{
 				tempType = DOUBLE_TYPE;
 				isThereMoreThanOnePoint = true;

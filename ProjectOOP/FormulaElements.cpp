@@ -4,7 +4,11 @@
 #include <stack>
 bool IsTheCurrentCharAnOperator(const String& string, int index)
 {
-	return string[index] == '+' || string[index] == '-' || string[index] == '*' || string[index] == '/' || string[index] == '^';
+	return string[index] == '+' 
+		|| string[index] == '-' 
+		|| string[index] == '*' 
+		|| string[index] == '/' 
+		|| string[index] == '^';
 }
 String getASinglePart(const String& string, int& index)
 {
@@ -13,10 +17,12 @@ String getASinglePart(const String& string, int& index)
 	{
 		index++;
 	}
-	if (index > 0 && index + 1 < string.getLength() && ((IsTheCurrentCharAnOperator(string, index) || string[index] == '(' || string[index] == ')')
-		&& (IsTheCurrentCharAnOperator(string, index - 1)) == false
-		&& (IsTheCurrentCharAnOperator(string, index + 1)) == false)
-		|| ((IsTheCurrentCharAnOperator(string, index) || string[index] == '(' || string[index] == ')') && (string[index + 1] == '+' || string[index + 1] == '-' || string[index] == '(' || string[index] == ')')))
+	if (index > 0 && index + 1 < string.getLength() 
+		&& ((IsTheCurrentCharAnOperator(string, index) || string[index] == '(' || string[index] == ')')
+		&& !IsTheCurrentCharAnOperator(string, index - 1)
+		&& (!IsTheCurrentCharAnOperator(string, index + 1)))
+		|| ((IsTheCurrentCharAnOperator(string, index) || string[index] == '(' || string[index] == ')')
+			&& (string[index + 1] == '+' || string[index + 1] == '-' || string[index] == '(' || string[index] == ')')))
 	{
 		tempString.PushBack(string[index++]);
 	}
@@ -76,7 +82,7 @@ FormulaElements::FormulaElements(const String& string, Excel& myExcel) : Element
 		int numberOfBrackets = 0;
 		for (int i = 0; i < m_NewString.getLength(); ++i)
 		{
-			if (i > 0 && IsTheCurrentCharAnOperator(m_NewString, i) && IsTheCurrentCharAnOperator(m_NewString, i - 1) == false )
+			if (i > 0 && IsTheCurrentCharAnOperator(m_NewString, i) && !IsTheCurrentCharAnOperator(m_NewString, i - 1))
 				numberOfNumbersAndOperators++;
 			if (m_NewString[i] == '(')
 				numberOfBrackets++;
@@ -200,11 +206,11 @@ String* m_ShuntingYardingParts(int& m_NumbersAndOperations, String* m_Parts, int
 			}
 			else
 			{
-				while ((OutputQueue.empty() == false &&
-					(((m_Parts[i][0] == '*' || m_Parts[i][0] == '/')
+				while ((!OutputQueue.empty()
+					&& (((m_Parts[i][0] == '*' || m_Parts[i][0] == '/')
 						&& (OutputQueue.top()[0] == '*' || OutputQueue.top()[0] == '/'))
-						|| ((m_Parts[i][0] == '+' || m_Parts[i][0] == '-')) ||
-							(m_Parts[i][0] != '^' && OutputQueue.top()[0] == '^'))))
+					|| ((m_Parts[i][0] == '+' || m_Parts[i][0] == '-')) 
+						||(m_Parts[i][0] != '^' && OutputQueue.top()[0] == '^'))))
 				{
 					m_Stack.push(OutputQueue.top());
 					OutputQueue.pop();
@@ -244,7 +250,7 @@ FormulaType FormulaTypeDeclaration(const String& string)
 	}
 	else
 	{
-		if (string[0] != 'R' || string.isThereAChar('C') == false || string[1] == 'C')
+		if (string[0] != 'R' || !string.isThereAChar('C') || string[1] == 'C')
 		{
 			return INVALID_FORMULA;
 		}
@@ -262,24 +268,29 @@ double FormulaElements::m_PostfixEvaluation()
 {
 	m_UsedInFormula = true;
 	std::stack<double> Stack;
-	for (int i = 0; i < m_NumbersAndOperations && m_DivisionByZero == false && m_EndlessRecursion == false; ++i)
+	for (int i = 0; i < m_NumbersAndOperations && !m_DivisionByZero && !m_EndlessRecursion; ++i)
 	{
 		if (FormulaTypeDeclaration(m_Parts[i]) == FORMULA_FORMULA)
 		{
 			int indexOfCharC = 1;
 			while (m_Parts[i][indexOfCharC] != 'C')
+			{
 				indexOfCharC++;
+			}
 			int RowOfElement = (m_Parts[i].SubString(1, indexOfCharC - 1)).FromStringToInt() - 1;
 			int ColumnOfElement = (m_Parts[i].SubString(indexOfCharC + 1, m_Parts[i].getLength())).FromStringToInt() - 1;
 			if (RowOfElement < m_MyExcel[0].GetRows() && ColumnOfElement < m_MyExcel[0].GetColumns())
 			{
-				if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE && m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion())
+				if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE 
+					&& m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion())
 				{
 					m_EndlessRecursion = true;
 				}
 			}
 		}
-		if (FormulaTypeDeclaration(m_Parts[i]) == INT_FORMULA || FormulaTypeDeclaration(m_Parts[i]) == DOUBLE_FORMULA || FormulaTypeDeclaration(m_Parts[i]) == FORMULA_FORMULA)
+		if (FormulaTypeDeclaration(m_Parts[i]) == INT_FORMULA
+			|| FormulaTypeDeclaration(m_Parts[i]) == DOUBLE_FORMULA 
+			|| FormulaTypeDeclaration(m_Parts[i]) == FORMULA_FORMULA)
 		{
 			Stack.push(m_FromFormulaInStringToNumber(m_Parts[i]));
 		}
@@ -288,12 +299,12 @@ double FormulaElements::m_PostfixEvaluation()
 			double a = 1;
 			double b = 0;
 			char operation = m_Parts[i][0];
-			if (Stack.empty() == false)
+			if (!Stack.empty())
 			{
 				a = Stack.top();
 				Stack.pop();
 			}
-			if (Stack.empty() == false)
+			if (!Stack.empty())
 			{
 				b = Stack.top();
 				Stack.pop();
@@ -308,7 +319,7 @@ double FormulaElements::m_PostfixEvaluation()
 			}
 		}
 	}
-	if (m_EndlessRecursion == false)
+	if (!m_EndlessRecursion)
 	{
 		m_UsedInFormula = false;
 	}
@@ -328,7 +339,7 @@ int FormulaElements::GetLengthOfPrint()
 		String lengthOf = "Division By Zero!";
 		return lengthOf.getLength();
 	}
-	if (m_UsedInFormula == true)
+	if (m_UsedInFormula)
 	{
 		String lengthOf = "Endless Recursion!";
 		return lengthOf.getLength();

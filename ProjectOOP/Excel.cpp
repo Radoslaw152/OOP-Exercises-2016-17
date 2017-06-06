@@ -21,7 +21,7 @@ int FindTheLastIndexOfElement(const String& str, int a)
 	int indexOfLastElement = a;
 	for (int i = a; i < str.getLength(); ++i)
 	{
-		if (str[i] == ',' && aCommaInAString == false)
+		if (str[i] == ',' && !aCommaInAString)
 		{
 			indexOfLastElement = i - 1;
 			break;
@@ -58,7 +58,7 @@ void Excel::m_ColumnsCalculating(const String* str)
 		sumColumns = 1;
 		for (int j = 0; j < str[i].getLength(); ++j)
 		{
-			if ((str[i].GetString())[j] == ',' && aCommaInString == false)
+			if ((str[i].GetString())[j] == ',' && !aCommaInString)
 				sumColumns++;
 			if ((str[i].GetString())[j] == '\"')
 				aCommaInString = (aCommaInString) ? false : true;
