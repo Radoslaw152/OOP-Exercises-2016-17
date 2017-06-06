@@ -1,9 +1,4 @@
 #include "ExcelMainMenu.h"
-#include "Elements.h"
-#include "StringElement.h"
-#include "FormulaElements.h"
-#include "NumberElement.h"
-#include "NumberElement.cpp"
 #include "Excel.h"
 #include <iostream>
 #include <fstream>

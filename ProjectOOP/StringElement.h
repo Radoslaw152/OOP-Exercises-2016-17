@@ -1,6 +1,5 @@
 #pragma once
 #include "Elements.h"
-#include <iostream>
 class StringElement : public Elements
 {
 public:

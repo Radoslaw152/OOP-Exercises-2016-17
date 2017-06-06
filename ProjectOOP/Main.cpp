@@ -1,6 +1,5 @@
 #include "ExcelMainMenu.h"
-#include "String.h"
-#include <iostream>
+
 int main()
 {
 	ExcelMainMenu FMI;

@@ -1,5 +1,5 @@
 #include "StringElement.h"
-
+#include <iostream>
 StringElement::StringElement()
 {
 	Elements:: Elements();

@@ -2,7 +2,6 @@
 #include "Elements.h"
 #include "Excel.h"
 #include "String.h"
-#include <iostream>
 #include <stack>
 enum FormulaType
 {

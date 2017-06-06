@@ -1,6 +1,5 @@
 #pragma once
 #include "String.h"
-#include <iostream>
 enum TypeOfElements
 {
 	NULL_TYPE, INT_TYPE, DOUBLE_TYPE, STRING_TYPE, FORMULA_TYPE, INVALID_TYPE

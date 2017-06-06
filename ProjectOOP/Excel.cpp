@@ -98,10 +98,6 @@ Excel::Excel(const String* str, int numberOfRows)
 			else
 			{
 				int tempNumberOfLastIntervals = numberOfLastIntervals(str[i], tempFinal);
-				if (tempFinal - tempNumberOfLastIntervals > str[i].getLength())
-				{
-					//std::cout << "You are accessing wrong area" << std::endl;
-				}
 				if(str[i].getLength() > tempStart && tempFinal - tempNumberOfLastIntervals < str[i].getLength())
 					tempArrayOfStrings[i][j] = str[i].SubString(tempStart,tempFinal - tempNumberOfLastIntervals);
 				else if (str[i].getLength() > tempStart)
