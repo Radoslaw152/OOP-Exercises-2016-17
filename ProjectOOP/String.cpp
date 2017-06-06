@@ -1,6 +1,5 @@
 #include "String.h"
 #include <iostream>
-
 String::String()
 {
 	m_string = new char[1];

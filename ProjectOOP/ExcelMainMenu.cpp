@@ -23,15 +23,16 @@ void ExcelMainMenu::Open()
 			const int MAX = 1000;
 			char buffer[MAX];
 			myFile.getline(buffer, MAX);
+			myFile.get();
 			++numberOfRows;
 		}
 		myDocument = new String[numberOfRows];
+		myFile.clear();
 		myFile.seekg(0);
 		for (int i = 0; i < numberOfRows; ++i)
 		{
 			getline(myFile, myDocument[i]);
 		}
-		myFile.seekg(0);
 		myFile.close();
 		std::cout << "Successfully opened " << fileDest << std::endl;
 		Excel ExcelFMI(myDocument, numberOfRows);

@@ -167,7 +167,8 @@ double FormulaElements::m_FromFormulaInStringToNumber(const String& string) cons
 		int ColumnOfElement = (string.SubString(indexOfCharC + 1, string.getLength())).FromStringToInt() - 1;
 		if (RowOfElement < m_MyExcel[0].GetRows() && ColumnOfElement < m_MyExcel[0].GetColumns())
 		{
-			if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE && m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->UsedInFormula())
+			if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE 
+				&& m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->UsedInFormula())
 			{
 				m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion() = true;
 				return 0;
@@ -197,7 +198,7 @@ String* m_ShuntingYardingParts(int& m_NumbersAndOperations, String* m_Parts, int
 		{
 			if (m_Parts[i][0] == ')')
 			{
-				while (OutputQueue.top()[0] != '(')
+				while (!OutputQueue.empty() && OutputQueue.top()[0] != '(')
 				{
 					m_Stack.push(OutputQueue.top());
 					OutputQueue.pop();
@@ -206,30 +207,38 @@ String* m_ShuntingYardingParts(int& m_NumbersAndOperations, String* m_Parts, int
 			}
 			else
 			{
-				while ((!OutputQueue.empty()
-					&& (((m_Parts[i][0] == '*' || m_Parts[i][0] == '/')
+				while (!OutputQueue.empty() && OutputQueue.top()[0] != '(' && (
+					(((m_Parts[i][0] == '*' || m_Parts[i][0] == '/')
 						&& (OutputQueue.top()[0] == '*' || OutputQueue.top()[0] == '/'))
-					|| ((m_Parts[i][0] == '+' || m_Parts[i][0] == '-')) 
-						||(m_Parts[i][0] != '^' && OutputQueue.top()[0] == '^'))))
+						|| ((m_Parts[i][0] == '+' || m_Parts[i][0] == '-'))
+						|| (m_Parts[i][0] != '^' && OutputQueue.top()[0] == '^'))))
 				{
 					m_Stack.push(OutputQueue.top());
 					OutputQueue.pop();
 				}
-					OutputQueue.push(m_Parts[i]);
+				OutputQueue.push(m_Parts[i]);
 			}
 		}
 	}
 	while (!OutputQueue.empty())
 	{
 		m_Stack.push(OutputQueue.top());
+		if (OutputQueue.empty())
+		{
+			std::cout << OutputQueue.top() << std::endl;
+		}
 		OutputQueue.pop();
 	}
 	m_NumbersAndOperations -= (2 * m_NumberOfBrackets);
 	delete[] m_Parts;
 	m_Parts = new String[m_NumbersAndOperations];
-	for (int i = m_NumbersAndOperations - 1 ; i >= 0; --i)
+	for (int i = m_NumbersAndOperations - 1; i >= 0; --i)
 	{
 		m_Parts[i] = m_Stack.top();
+		if (m_Stack.empty())
+		{
+			std::cout << m_Stack.top() << std::endl;
+		}
 		m_Stack.pop();
 	}
 	return m_Parts;

@@ -25,7 +25,7 @@ public:
 	~FormulaElements();
 	virtual bool& EndlessRecursion() override { return m_EndlessRecursion; }
 	virtual bool UsedInFormula() const override { return m_UsedInFormula; }
-	virtual void Print(std::ostream&); //const
+	virtual void Print(std::ostream&);
 	virtual double ValueForFormula() override;
 	virtual int GetLengthOfPrint() override;
 };
