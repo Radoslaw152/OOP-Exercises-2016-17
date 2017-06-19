@@ -18,7 +18,8 @@ void ExcelMainMenu::Open()
 	}
 	else
 	{
-		while (!myFile.eof())
+		//calculating how many rows are there
+		while (!myFile.eof()) 
 		{
 			const int MAX = 1000;
 			char buffer[MAX];
@@ -232,6 +233,7 @@ String* ExcelMainMenu::EnterAOperation(int& intervals)
 {
 	String tempString;
 	getline(std::cin, tempString);
+	//calculating how many words are there
 	for (int i = 0; i < tempString.getLength() && intervals < 2; ++i)
 	{
 		if (tempString[i] == ' ')

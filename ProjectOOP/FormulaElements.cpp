@@ -29,9 +29,13 @@ String getASinglePart(const String& string, int& index)
 	else
 	{
 		bool didWeHaveANumberAlready = false;
-		while ((index < string.getLength() && !(string[index] == '(' || string[index] == ')') && !IsTheCurrentCharAnOperator(string, index))
-				|| (index > 0 && IsTheCurrentCharAnOperator(string, index - 1) && (string[index] == '+' || string[index] == '-')
-				&& !IsTheCurrentCharAnOperator(string, index + 1) && !didWeHaveANumberAlready))
+		while ((index < string.getLength() 
+					&& !(string[index] == '(' || string[index] == ')') 
+					&& !IsTheCurrentCharAnOperator(string, index))
+				|| (index > 0 && IsTheCurrentCharAnOperator(string, index - 1) 
+					&& (string[index] == '+' || string[index] == '-')
+					&& !IsTheCurrentCharAnOperator(string, index + 1) 
+					&& !didWeHaveANumberAlready))
 		{
 			if (string[index] >= '0' && string[index] <= '9')
 				didWeHaveANumberAlready = true;
@@ -165,17 +169,17 @@ double FormulaElements::m_FromFormulaInStringToNumber(const String& string) cons
 			indexOfCharC++;
 		int RowOfElement = (string.SubString(1, indexOfCharC - 1)).FromStringToInt() - 1;
 		int ColumnOfElement = (string.SubString(indexOfCharC + 1, string.getLength())).FromStringToInt() - 1;
-		if (RowOfElement < m_MyExcel[0].GetRows() && ColumnOfElement < m_MyExcel[0].GetColumns())
+		if (RowOfElement < (*m_MyExcel).GetRows() && ColumnOfElement < (*m_MyExcel).GetColumns())
 		{
-			if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE 
-				&& m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->UsedInFormula())
+			if ((*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE
+				&& (*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement)->UsedInFormula())
 			{
-				m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion() = true;
+				(*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion() = true;
 				return 0;
 			}
 			else
 			{
-				return (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement))->ValueForFormula();
+				return ((*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement))->ValueForFormula();
 			}
 		}
 		else
@@ -207,6 +211,9 @@ String* m_ShuntingYardingParts(int& m_NumbersAndOperations, String* m_Parts, int
 			}
 			else
 			{
+				//Pop an operator which has a higher precedence or the same
+				//as the current one till the top of the Output Queue has an
+				//lower precedence that the current one
 				while (!OutputQueue.empty() && OutputQueue.top()[0] != '(' && (
 					(((m_Parts[i][0] == '*' || m_Parts[i][0] == '/')
 						&& (OutputQueue.top()[0] == '*' || OutputQueue.top()[0] == '/'))
@@ -288,10 +295,10 @@ double FormulaElements::m_PostfixEvaluation()
 			}
 			int RowOfElement = (m_Parts[i].SubString(1, indexOfCharC - 1)).FromStringToInt() - 1;
 			int ColumnOfElement = (m_Parts[i].SubString(indexOfCharC + 1, m_Parts[i].getLength())).FromStringToInt() - 1;
-			if (RowOfElement < m_MyExcel[0].GetRows() && ColumnOfElement < m_MyExcel[0].GetColumns())
+			if (RowOfElement < (*m_MyExcel).GetRows() && ColumnOfElement < (*m_MyExcel).GetColumns())
 			{
-				if (m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE 
-					&& m_MyExcel[0].ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion())
+				if ((*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement)->GetType() == FORMULA_TYPE
+					&& (*m_MyExcel).ReturnElement(RowOfElement, ColumnOfElement)->EndlessRecursion())
 				{
 					m_EndlessRecursion = true;
 				}

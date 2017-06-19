@@ -22,8 +22,8 @@ public:
 	String GetString() const { return m_String; };
 	virtual int GetLengthOfPrint() { return m_String.getLength(); }
 	virtual double ValueForFormula() { return 0; };
-	int GetLengthOfElement() const { return m_LengthOfElement; };
-	TypeOfElements GetType() const { return m_Type; };
+	int GetLengthOfElement() const { return m_LengthOfElement; }
+	TypeOfElements GetType() const { return m_Type; }
 	virtual ~Elements() {};
 };
 TypeOfElements TypeDeclaration(const String&);
