@@ -98,7 +98,10 @@ FormulaElements::FormulaElements(const String& string, Excel& myExcel) : Element
 		{
 			m_Parts[i] = getASinglePart(m_NewString, startingIndex);
 			if (FormulaTypeDeclaration(m_Parts[i]) == INVALID_FORMULA)
+			{
 				m_Type = INVALID_TYPE;
+				Elements::isThereAInvalidType = true;
+			}
 		}
 		m_Parts = m_ShuntingYardingParts(m_NumbersAndOperations, m_Parts, numberOfBrackets);
 	}
