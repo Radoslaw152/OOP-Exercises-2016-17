@@ -125,7 +125,7 @@ void StrCopy(char* str1, const char* str2)
 }
 int StrCompr(const char* str1, const char* str2)
 {
-	for (int i = 0; str1[i] != '\0' || str2[i] != '\0'; i++)
+	for (int i = 0; str1[i] != '\0' && str2[i] != '\0'; i++)
 	{
 		if (str1[i] > str2[i])
 		{
@@ -136,6 +136,8 @@ int StrCompr(const char* str1, const char* str2)
 			return -1;
 		}
 	}
+	if (StrLength(str1) > StrLength(str2)) return 1;
+	if (StrLength(str2) > StrLength(str1)) return -1;
 	return 0;
 }
 bool String::operator==(const char* str2) const
