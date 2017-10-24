@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include <iostream>
 template<typename T>
 struct Node
@@ -29,16 +30,17 @@ public:
 template<typename T>
 void Stack<T>::CopyStack(const Stack& rhs)
 {
-	m_Head = nullptr;
 	if (!rhs.Empty())
 	{
-		Node<T>* current = new Node<T>(rhs.m_Head->data, rhs.m_Head->next);
-		m_Head = current;
-		while (current->next)
+		Node<T>* lastCopied,* copyFrom,* bufferNode;
+		lastCopied = new Node<T>(rhs.m_Head->data);
+		copyFrom = rhs.m_Head->next;
+		m_Head = lastCopied;
+		while (copyFrom)
 		{
-			current = new Node<T>(current->next->data, current->next->next);
-			current = current->next;
-			m_Size++;
+			bufferNode = new Node<T>(copyFrom->data);
+			lastCopied->next = bufferNode;
+			copyFrom = copyFrom->next;
 		}
 	}
 }
@@ -50,7 +52,7 @@ void Stack<T>::DeleteStack()
 	m_Size = 0;
 }
 template<typename T>
-Stack<T>::Stack(const T& Head, int size) : m_Head(new Node<T>(Head, nullptr)) , m_Size(size)
+Stack<T>::Stack(const T& Head, int size) : m_Head(new Node<T>(Head, nullptr)), m_Size(size)
 {
 
 }
@@ -84,7 +86,7 @@ void Stack<T>::PushBack(const T& element)
 template<typename T>
 T Stack<T>::PopBack()
 {
-	if (Empty())
+	if (!m_Head)
 	{
 		std::cout << "Error: Popping back from empty stack!" << std::endl;
 		return T();
