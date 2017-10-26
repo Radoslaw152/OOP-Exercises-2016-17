@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include <iostream>
 template<typename T>
 struct Node
@@ -31,16 +32,17 @@ void Stack<T>::CopyStack(const Stack& rhs)
 {
 	if (!rhs.Empty())
 	{
-		Node<T>* lastCopied,* copyFrom,* bufferNode;
-		lastCopied = new Node<T>(rhs.m_Head->data);
+		Node<T>* lastCopied,* copyFrom;
+		m_Head = new Node<T>(rhs.m_Head->data);
+		lastCopied = m_Head;
 		copyFrom = rhs.m_Head->next;
-		m_Head = lastCopied;
 		while (copyFrom)
 		{
-			bufferNode = new Node<T>(copyFrom->data);
-			lastCopied->next = bufferNode;
+			lastCopied->next = new Node<T>(copyFrom->data);
+			lastCopied = lastCopied->next;
 			copyFrom = copyFrom->next;
 		}
+		m_Size = rhs.m_Size;
 	}
 }
 template<typename T>
@@ -48,6 +50,7 @@ void Stack<T>::DeleteStack()
 {
 	while (!Empty())
 		PopBack();
+	m_Head = nullptr;
 	m_Size = 0;
 }
 template<typename T>
@@ -78,8 +81,7 @@ Stack<T>::~Stack()
 template<typename T>
 void Stack<T>::PushBack(const T& element)
 {
-	Node<T>* newElement = new Node<T>(element, m_Head);
-	m_Head = newElement;
+	m_Head = new Node<T>(element, m_Head);
 	m_Size++;
 }
 template<typename T>
