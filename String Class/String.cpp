@@ -73,10 +73,7 @@ std::ostream& operator<< (std::ostream& lhs, const String& rhs)
 }
 std::istream& operator >> (std::istream& lhs, String& rhs)
 {
-	const int MaxLength = 1000;
-	char buffer[MaxLength];
-	lhs >> buffer;
-	rhs = buffer;
+	getWord(lhs, rhs);
 	return lhs;
 }
 char& String::operator[](int i) const

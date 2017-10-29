@@ -25,6 +25,7 @@ public:
 	void Clear();
 	bool operator==(const String&) const;
 	bool operator==(const char*) const;
+	bool operator!=(const char* str) const { return !(*this == str); }
 	bool operator<(const char*) const;
 	bool operator<(const String&) const;
 	bool operator>(const char*) const;
