@@ -87,6 +87,7 @@ DoublyLinkedList<T>& DoublyLinkedList<T>::operator=(const DoublyLinkedList& rhs)
 		DeleteList();
 		CopyList(rhs);
 	}
+	return *this;
 }
 template<typename T>
 DoublyLinkedList<T>::~DoublyLinkedList()
@@ -96,28 +97,7 @@ DoublyLinkedList<T>::~DoublyLinkedList()
 template<typename T>
 bool DoublyLinkedList<T>::Push_Back(const T& key)
 {
-	Node<T>* newElement = new Node<T>(key, m_Last);
-	if (!newElement)
-		return false;
-	if (!m_First) 
-	{
-		m_First = newElement;
-		m_First->previous = nullptr;
-		m_First->next = m_Last;
-		m_Last = newElement;
-		m_Last->previous = m_First;
-	}
-	else
-	{
-		if (m_Size == 1)
-		{
-			m_First->next = newElement;
-		}
-		m_Last->next = newElement;
-		m_Last = newElement;
-	}
-	m_Size++;
-	return true;
+	return Insert(key, m_Size);
 }
 template<typename T>
 bool DoublyLinkedList<T>::Insert(const T& key, int n)
@@ -130,8 +110,10 @@ bool DoublyLinkedList<T>::Insert(const T& key, int n)
 	if (n == 0)
 	{
 		Node<T>* newElement = new Node<T>(key, nullptr, m_First);
-		m_First->previous = newElement;
+		if(m_First) m_First->previous = newElement;
 		m_First = newElement;
+		if (m_Size == 0)
+			m_Last = m_First;
 		return ++m_Size;
 	}
 	if (n == m_Size)
@@ -258,8 +240,39 @@ void DoublyLinkedList<T>::Swap(int a, int b)
 		Node<T>* second = m_First;
 		for (int currentPlace = 0; currentPlace < b; currentPlace++)
 			second = second->next;
-		T temp = first->data;
-		first->data = second->data;
-		second->data = temp;
+		if (first->next == second)
+		{
+			if (first->previous)
+			{
+				first->previous->next = second;
+			}
+			if (second->next)
+			{
+				second->next->previous = first;
+			}
+			second->previous = first->previous;
+			first->next = second->next;
+			second->next = first;
+			first->previous = second;
+		}
+		else
+		{
+			if (first->previous) 
+			{
+				first->previous->next = second;
+			}
+			if (second->next)
+			{
+				second->next->previous = first;
+			}
+			first->next->previous = second;
+			second->previous->next = first;
+			std::swap(first->next, second->next);
+			std::swap(first->previous, second->previous);
+		}
+		if (m_First == first)
+			m_First = second;
+		if (m_Last == second)
+			m_Last = first;
 	}
 }
