@@ -1,18 +1,21 @@
 #pragma once
 #include <list>
-
+#include <vector>
+#include <stack>
 template<typename T>
 class Graph
 {
 private:
 	std::list<std::list<T>> m_Graph;
-	bool CheckVertex(const T&);
 public:
+	bool CheckVertex(const T&);
+	bool CheckEdge(const T&, const T&);
 	bool AddVertex(const T&);
 	bool RemoveVertex(const T&);
 	bool AddEdge(const T&, const T&);
 	bool RemoveEdge(const T&, const T&);
 	void Print();
+	std::vector<T> TopologicalSorting();
 };
 template<typename T>
 void Graph<T>::Print()
@@ -126,4 +129,86 @@ bool Graph<T>::RemoveEdge(const T& a, const T& b)
 		return false;
 	it->erase(secondIt);
 	return true;
+}
+template<typename T>
+bool Graph<T>::CheckEdge(const T& a, const T& b)
+{
+	std::list<std::list<T>>::iterator it = m_Graph.begin();
+	while (it != m_Graph.end() && *it->begin() != a)
+		it++;
+	if (it == m_Graph.end()) return false;
+	std::list<T>::iterator secondIt = it->begin();
+	while (secondIt != it->end() && *secondIt != b)
+		secondIt++;
+	if (secondIt == it->end()) return false;
+	return true;
+}
+template<typename T>
+std::vector<T> Graph<T>::TopologicalSorting() 
+{
+	std::vector<T> sortedElements;
+	std::stack<T> wave;
+	std::vector<T> checked;
+	checked.push_back(*(m_Graph.begin())->begin());
+	wave.push(*(m_Graph.begin())->begin());
+	while (!wave.empty())
+	{
+		T current = wave.top();
+		wave.pop();
+		std::list<std::list<T>>::iterator it = m_Graph.begin();
+		while (*it->begin() != current)
+			it++;
+		std::list<T>::iterator secondIt = it->begin();
+		secondIt++;
+
+		bool addCurrent = true;
+		while (secondIt != it->end())
+		{
+			bool Checked = false;
+			for (int i = 0; i < checked.size(); ++i)
+			{
+				if (checked[i] == *secondIt)
+				{
+					Checked = true;
+					break;
+				}
+			}
+			if (!Checked)
+			{
+				if (addCurrent)
+				{
+					wave.push(current);
+					addCurrent = false;
+				}
+				checked.push_back(*secondIt);
+				wave.push(*secondIt);
+			}
+			secondIt++;
+		}
+		if(addCurrent)
+			sortedElements.push_back(current);
+		if (wave.empty() && sortedElements.size() < m_Graph.size())
+		{
+			std::list<std::list<T>>::iterator it = m_Graph.begin();
+			while (it != m_Graph.end())
+			{
+				bool Checked = false;
+				for (int i = 0; i < checked.size(); ++i)
+				{
+					if (checked[i] == *it->begin())
+					{
+						Checked = true;
+						break;
+					}
+				}
+				if (!Checked)
+					wave.push(*it->begin());
+				++it;
+			}
+		}
+	}
+	std::vector<T> reversedSortedElements;
+	for (int j = sortedElements.size() - 1; j >= 0; --j)
+		reversedSortedElements.push_back(sortedElements[j]);
+	return reversedSortedElements;
 }
